@@ -6,11 +6,7 @@ const defaultHeader = {
 };
 
 export const axiosWrapper = axios.create({
-  baseURL:
-    import.meta.env.VITE_BACKEND_URL ||
-    (import.meta.env.PROD
-      ? 'https://restaurant-management-tau-sable.vercel.app'
-      : 'https://restaurant-management-tau-sable.vercel.app'),
+  baseURL: import.meta.env.VITE_BACKEND_URL || 'https://restaurant-management-tau-sable.vercel.app',
   withCredentials: true,
   headers: { ...defaultHeader },
 });
