@@ -5,7 +5,7 @@ const defaultHeader = {
   Accept: "application/json",
 };
 
-const backendUrl = import.meta.env.VITE_BACKEND_URL || 'https://restaurant-management-tau-sable.vercel.app';
+const backendUrl ='https://restaurant-management-tau-sable.vercel.app';
 
 export const axiosWrapper = axios.create({
   baseURL: backendUrl,

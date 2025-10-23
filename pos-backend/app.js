@@ -17,7 +17,6 @@ app.use(cors({
     credentials: true,
     origin: [
         process.env.FRONTEND_URL,
-        'http://localhost:5173',
         'https://restaurant-management-mlm6.vercel.app'
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS']
