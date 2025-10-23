@@ -25,6 +25,10 @@ const orderSchema = new mongoose.Schema({
         totalWithDiscount: { type: Number, required: true }
     },
     items: [],
+    table: {
+        _id: { type: mongoose.Schema.Types.ObjectId, ref: "Table" },
+        tableNo: { type: Number }
+    },
     seats: [{
         tableId: { type: mongoose.Schema.Types.ObjectId, ref: "Table" },
         seatNumber: { type: Number }

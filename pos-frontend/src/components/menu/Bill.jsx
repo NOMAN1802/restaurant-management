@@ -142,10 +142,19 @@ const Bill = ({ orderId = null }) => { // Accept orderId as prop
       return;
     }
 
+    // For Dine In orders, check if seats are selected
+    if (orderType === 'Dine In' && (!seats || seats.length === 0)) {
+      enqueueSnackbar("Please select seats for Dine In order!", { variant: "warning" });
+      return;
+    }
+
     try {
       const payload = {
         orderId,
         items: cartData,
+        orderType,
+        table,
+        seats: orderType === 'Dine In' ? seats : [],
         customerDetails: {
           serialNumber,
           guests,

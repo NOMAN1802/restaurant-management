@@ -123,10 +123,15 @@ const getOrderById = async (req, res, next) => {
       return next(error);
     }
 
-    const order = await Order.findById(id).populate({ 
-      path: 'seats.tableId',
-      model: 'Table'
-  }); // Populate table information
+    const order = await Order.findById(id)
+      .populate({ 
+        path: 'seats.tableId',
+        model: 'Table'
+      })
+      .populate({
+        path: 'table._id',
+        model: 'Table'
+      }); // Populate table information
     if (!order) {
       const error = createHttpError(404, "Order not found!");
       return next(error);
@@ -140,10 +145,15 @@ const getOrderById = async (req, res, next) => {
 
 const getOrders = async (req, res, next) => {
   try {
-    const orders = await Order.find().populate({ 
-      path: 'seats.tableId',
-      model: 'Table'
-  });
+    const orders = await Order.find()
+      .populate({ 
+        path: 'seats.tableId',
+        model: 'Table'
+      })
+      .populate({
+        path: 'table._id',
+        model: 'Table'
+      });
     res.status(200).json({ data: orders });
   } catch (error) {
     next(error);
@@ -425,7 +435,7 @@ const addItemToOrder = async (req, res, next) => {
 const updateOrderItems = async (req, res, next) => {
   try {
     const { id } = req.params; // Order ID
-    const { items, bills } = req.body; // Array of new items to add, plus orderType, table, and bills
+    const { items, bills, orderType, table, seats, customerDetails } = req.body; // Array of new items to add, plus orderType, table, seats, and bills
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       const error = createHttpError(404, "Invalid order ID!");
@@ -444,7 +454,32 @@ const updateOrderItems = async (req, res, next) => {
       return next(error);
     }
 
-    // Add new items to the existing items array
+    // Update orderType if provided
+    if (orderType) {
+      order.orderType = orderType;
+    }
+
+    // Validate table requirement for Dine In orders
+    if ((orderType === 'Dine In' || order.orderType === 'Dine In') && !table && (!seats || seats.length === 0)) {
+      return next(createHttpError(400, 'Table and seats are required for Dine In orders.'));
+    }
+
+    // Update table if provided
+    if (table) {
+      order.table = table;
+    }
+
+    // Update seats if provided
+    if (seats) {
+      order.seats = seats;
+    }
+
+    // Update customer details if provided
+    if (customerDetails) {
+      order.customerDetails = { ...order.customerDetails, ...customerDetails };
+    }
+
+    // Update items
     order.items = items;
 
     // Recalculate total
@@ -467,7 +502,7 @@ const updateOrderItems = async (req, res, next) => {
 
     await order.save();
 
-    res.status(200).json({ success: true, message: "Items added to order successfully", data: order });
+    res.status(200).json({ success: true, message: "Order updated successfully", data: order });
   } catch (error) {
     next(error);
   }
