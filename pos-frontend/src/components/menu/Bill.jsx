@@ -37,8 +37,32 @@ const Bill = ({ orderId = null }) => { // Accept orderId as prop
   useEffect(() => {
     if (orderId && fetchedOrderData && fetchedOrderData?.data) {
       setOrderInfo(fetchedOrderData.data?.data);
-      if (fetchedOrderData.data?.data?.customerDetails) {
-        dispatch(setCustomer(fetchedOrderData.data?.data?.customerDetails));
+      if (fetchedOrderData.data?.data) {
+        const loadedOrder = fetchedOrderData.data.data;
+        // Derive table info: prefer loadedOrder.table, otherwise use first seat's populated tableId
+        let tableInfo = loadedOrder.table || null;
+        if (!tableInfo && Array.isArray(loadedOrder.seats) && loadedOrder.seats.length > 0) {
+          const firstSeat = loadedOrder.seats[0];
+          // If seats were populated with table documents, tableId will be an object
+          if (firstSeat.tableId && typeof firstSeat.tableId === 'object') {
+            tableInfo = {
+              _id: firstSeat.tableId._id || firstSeat.tableId.id || null,
+              tableNo: firstSeat.tableId.tableNo || firstSeat.tableId.name || null,
+            };
+          } else if (firstSeat.tableId) {
+            // fallback to id-only
+            tableInfo = { _id: firstSeat.tableId };
+          }
+        }
+
+        dispatch(setCustomer({
+          serialNumber: loadedOrder.customerDetails?.serialNumber || "",
+          guests: loadedOrder.customerDetails?.guests || 0,
+          table: tableInfo,
+          seats: loadedOrder.seats || [],
+          orderType: loadedOrder.orderType || "Dine In",
+          orderId: loadedOrder._id || "",
+        }));
       }
     }
   }, [orderId, fetchedOrderData]);
