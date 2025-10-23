@@ -1,0 +1,21 @@
+{
+  "name": "pos-monorepo",
+  "version": "1.0.0",
+  "description": "Point of Sale System - Full Stack Application",
+  "scripts": {
+    "build": "npm install --prefix pos-backend --legacy-peer-deps && npm install --prefix pos-frontend --legacy-peer-deps && npm run build --prefix pos-frontend",
+    "start": "npm start --prefix pos-backend",
+    "dev:backend": "npm run dev --prefix pos-backend",
+    "dev:frontend": "npm run dev --prefix pos-frontend",
+    "install:backend": "npm install --prefix pos-backend --legacy-peer-deps",
+    "install:frontend": "npm install --prefix pos-frontend --legacy-peer-deps",
+    "deploy": "node deploy.js",
+    "deploy:sh": "bash deploy.sh"
+  },
+  "keywords": ["pos", "point-of-sale", "react", "node", "express", "mongodb"],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
