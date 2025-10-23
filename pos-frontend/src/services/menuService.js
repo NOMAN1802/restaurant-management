@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'restaurant-management-tau-sable.vercel.app/api';
 
 // Helper function to get auth headers for JSON requests
 const getAuthHeaders = () => {

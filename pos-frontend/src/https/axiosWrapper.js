@@ -9,8 +9,8 @@ export const axiosWrapper = axios.create({
   baseURL:
     import.meta.env.VITE_BACKEND_URL ||
     (import.meta.env.PROD
-      ? 'http://localhost:5000'
-      : 'http://localhost:5000'),
+      ? 'restaurant-management-tau-sable.vercel.app'
+      : 'restaurant-management-tau-sable.vercel.app'),
   withCredentials: true,
   headers: { ...defaultHeader },
 });

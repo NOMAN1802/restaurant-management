@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const userManagementApi = createApi({
     reducerPath: 'userManagementApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:5000/api/',
+        baseUrl: 'restaurant-management-tau-sable.vercel.app/api/',
         credentials: 'include',
     }),
     endpoints: (builder) => ({

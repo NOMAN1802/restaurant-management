@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: 'restaurant-management-tau-sable.vercel.app',
         changeOrigin: true,
         secure: false,
       }
