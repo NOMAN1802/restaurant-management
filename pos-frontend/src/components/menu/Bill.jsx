@@ -40,22 +40,29 @@ const Bill = ({ orderId = null }) => { // Accept orderId as prop
       if (fetchedOrderData.data?.data) {
         const loadedOrder = fetchedOrderData.data.data;
         console.log("Loading order data:", loadedOrder);
+        console.log("Order table field:", loadedOrder.table);
+        console.log("Order seats field:", loadedOrder.seats);
         
         // Derive table info: prefer loadedOrder.table, otherwise use first seat's populated tableId
         let tableInfo = loadedOrder.table || null;
         console.log("Initial tableInfo from loadedOrder.table:", tableInfo);
         
-        if (!tableInfo && Array.isArray(loadedOrder.seats) && loadedOrder.seats.length > 0) {
+        // If table is not set or doesn't have tableNo, try to get it from seats
+        if ((!tableInfo || !tableInfo.tableNo) && Array.isArray(loadedOrder.seats) && loadedOrder.seats.length > 0) {
           const firstSeat = loadedOrder.seats[0];
           console.log("First seat:", firstSeat);
+          console.log("First seat tableId type:", typeof firstSeat.tableId);
+          
           // If seats were populated with table documents, tableId will be an object
           if (firstSeat.tableId && typeof firstSeat.tableId === 'object') {
             tableInfo = {
               _id: firstSeat.tableId._id || firstSeat.tableId.id || null,
               tableNo: firstSeat.tableId.tableNo || firstSeat.tableId.name || null,
             };
+            console.log("Extracted tableInfo from populated seat:", tableInfo);
           } else if (firstSeat.tableId) {
-            // fallback to id-only
+            // fallback to id-only (we'll need to fetch the table separately)
+            console.log("Seat has tableId but not populated:", firstSeat.tableId);
             tableInfo = { _id: firstSeat.tableId };
           }
         }

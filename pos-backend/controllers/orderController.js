@@ -151,6 +151,17 @@ const getOrderById = async (req, res, next) => {
       return next(error);
     }
 
+    // If table field is missing but seats exist, populate table from first seat
+    if ((!order.table || !order.table.tableNo) && order.seats && order.seats.length > 0) {
+      const firstSeat = order.seats[0];
+      if (firstSeat.tableId && typeof firstSeat.tableId === 'object') {
+        order.table = {
+          _id: firstSeat.tableId._id,
+          tableNo: firstSeat.tableId.tableNo
+        };
+      }
+    }
+
     res.status(200).json({ success: true, data: order });
   } catch (error) {
     next(error);
@@ -168,6 +179,20 @@ const getOrders = async (req, res, next) => {
         path: 'table._id',
         model: 'Table'
       });
+    
+    // For each order, if table field is missing but seats exist, populate table from first seat
+    orders.forEach(order => {
+      if ((!order.table || !order.table.tableNo) && order.seats && order.seats.length > 0) {
+        const firstSeat = order.seats[0];
+        if (firstSeat.tableId && typeof firstSeat.tableId === 'object') {
+          order.table = {
+            _id: firstSeat.tableId._id,
+            tableNo: firstSeat.tableId.tableNo
+          };
+        }
+      }
+    });
+    
     res.status(200).json({ data: orders });
   } catch (error) {
     next(error);

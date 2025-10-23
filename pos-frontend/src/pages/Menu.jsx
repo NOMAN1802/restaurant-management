@@ -55,7 +55,7 @@ const Menu = () => {
                 </h2>
                 {customerData.orderType === 'Dine In' && (
                   <p className="text-xs text-gray-500">
-                    Table: {customerData.table?.tableNo || "N/A"} {customerData.seats && customerData.seats.length > 0 ? `(Seats: ${customerData.seats.map(s => s.seatNumber).join(', ')})` : ''}
+                    Table: {customerData.table?.tableNo || (customerData.seats && customerData.seats.length > 0 && customerData.seats[0].tableId?.tableNo) || "N/A"} {customerData.seats && customerData.seats.length > 0 ? `(Seats: ${customerData.seats.map(s => s.seatNumber).join(', ')})` : ''}
                   </p>
                 )}
               </div>
@@ -104,7 +104,7 @@ const Menu = () => {
                     </h2>
                     {customerData.orderType === 'Dine In' && (
                       <p className="text-sm text-gray-500 font-medium">
-                        Table: {customerData.table?.tableNo || "N/A"}
+                        Table: {customerData.table?.tableNo || (customerData.seats && customerData.seats.length > 0 && customerData.seats[0].tableId?.tableNo) || "N/A"}
                       </p>
                     )}
                   </div>
