@@ -134,14 +134,16 @@ const MenuContainer = () => {
       return;
     }
 
-    // For Dine In orders, check if table is selected
-    if (customerData.orderType === 'Dine In' && !customerData.table) {
+    // For Dine In orders, check if table is selected or seats are selected
+    // Allow either table or seats to be present (for existing orders, seats might be populated)
+    if (customerData.orderType === 'Dine In' && !customerData.table && (!customerData.seats || customerData.seats.length === 0)) {
+      console.log("Table validation failed. Customer data:", customerData);
       enqueueSnackbar("Please select a table for Dine In order!", { variant: "error" });
       return;
     }
 
     // For Dine In orders, check if enough seats are selected for the number of guests
-    if (customerData.orderType === 'Dine In' && customerData.seats) {
+    if (customerData.orderType === 'Dine In' && customerData.seats && customerData.guests) {
       const selectedSeatsCount = customerData.seats.length;
       if (selectedSeatsCount < customerData.guests) {
         enqueueSnackbar(`Not enough seats selected. You have ${customerData.guests} guests but only ${selectedSeatsCount} seats selected. Please select more seats.`, { variant: "error" });

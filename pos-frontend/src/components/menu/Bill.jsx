@@ -39,10 +39,15 @@ const Bill = ({ orderId = null }) => { // Accept orderId as prop
       setOrderInfo(fetchedOrderData.data?.data);
       if (fetchedOrderData.data?.data) {
         const loadedOrder = fetchedOrderData.data.data;
+        console.log("Loading order data:", loadedOrder);
+        
         // Derive table info: prefer loadedOrder.table, otherwise use first seat's populated tableId
         let tableInfo = loadedOrder.table || null;
+        console.log("Initial tableInfo from loadedOrder.table:", tableInfo);
+        
         if (!tableInfo && Array.isArray(loadedOrder.seats) && loadedOrder.seats.length > 0) {
           const firstSeat = loadedOrder.seats[0];
+          console.log("First seat:", firstSeat);
           // If seats were populated with table documents, tableId will be an object
           if (firstSeat.tableId && typeof firstSeat.tableId === 'object') {
             tableInfo = {
@@ -54,6 +59,9 @@ const Bill = ({ orderId = null }) => { // Accept orderId as prop
             tableInfo = { _id: firstSeat.tableId };
           }
         }
+        
+        console.log("Final tableInfo to be set:", tableInfo);
+        console.log("Seats to be set:", loadedOrder.seats);
 
         dispatch(setCustomer({
           serialNumber: loadedOrder.customerDetails?.serialNumber || "",
@@ -65,7 +73,7 @@ const Bill = ({ orderId = null }) => { // Accept orderId as prop
         }));
       }
     }
-  }, [orderId, fetchedOrderData]);
+  }, [orderId, fetchedOrderData, dispatch]);
 
   const [couponCodeInput, setCouponCodeInput] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState(null);

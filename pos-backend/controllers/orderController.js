@@ -62,11 +62,25 @@ const addOrder = async (req, res, next) => {
       }
     }
 
+    // Extract table information from seats for Dine In orders
+    let tableInfo = null;
+    if (orderType === 'Dine In' && seats && seats.length > 0) {
+      const firstSeatTableId = seats[0].tableId;
+      const tableDoc = await Table.findById(firstSeatTableId).session(session);
+      if (tableDoc) {
+        tableInfo = {
+          _id: tableDoc._id,
+          tableNo: tableDoc.tableNo
+        };
+      }
+    }
+
     const order = new Order({
       customerDetails,
       orderStatus,
       items,
       seats: orderType === 'Dine In' ? seats : [],
+      table: tableInfo,
       orderType,
       bills: {
         total,
