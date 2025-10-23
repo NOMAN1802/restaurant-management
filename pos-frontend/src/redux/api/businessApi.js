@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-const API_BASE_URL = 'restaurant-management-tau-sable.vercel.app/api';
+const API_BASE_URL = 'https://restaurant-management-tau-sable.vercel.app/api';
 
 export const businessApi = createApi({
     reducerPath: 'businessApi',
